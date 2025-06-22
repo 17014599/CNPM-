@@ -56,39 +56,30 @@
       <!-- Tab 3: Ảnh DICOM + AI -->
       <section class="tab-content">
         <h2>Ảnh DICOM & Phân tích AI</h2>
-        <div class="image-tools">
-          <button>🔍 Zoom</button>
-          <button>↔️ Pan</button>
-          <button>☀️ Độ tương phản</button>
-        </div>
 
-        <div class="image-viewer">
-          <p>[Giả lập ảnh DICOM]</p>
-        </div>
+        <form id="upload-form">
+          <label>Chọn ảnh DICOM:</label>
+          <input type="file" id="dicom-file" accept=".dcm" required />
+          <button type="submit">📤 Gửi ảnh đến AI</button>
+        </form>
 
-        <h3>Kết quả AI</h3>
-        <div class="ai-result">
-          <p><strong>Kết luận:</strong> Có dấu hiệu tổn thương mô phổi</p>
-          <p><strong>Xác suất:</strong> 92.4%</p>
-        </div>
-
-        <h3>Annotation & So sánh</h3>
-        <textarea rows="3" placeholder="Ghi chú vùng bất thường..."></textarea>
-        <button>🆚 So sánh ảnh cũ</button>
+        <h4>Kết quả chẩn đoán</h4>
+        <pre id="ai-result-box">Chưa có kết quả...</pre>
       </section>
 
       <!-- Tab 4: Báo cáo chẩn đoán -->
       <section class="tab-content">
         <h2>Tạo báo cáo chẩn đoán</h2>
-<input type="text" id="reportPatientId" placeholder="Mã bệnh nhân" required />
-<textarea id="reportContent" rows="6" placeholder="Nhập nội dung báo cáo..." required></textarea>
-<div class="report-actions">
-  <button onclick="submitReport()">💾 Lưu nội bộ</button>
-  <button>⬇️ Xuất PDF</button>
-</div>
+        <input type="text" id="reportPatientId" placeholder="Mã bệnh nhân" required />
+        <textarea id="reportContent" rows="6" placeholder="Nhập nội dung báo cáo..." required></textarea>
+        <div class="report-actions">
+          <button onclick="submitReport()">💾 Lưu nội bộ</button>
+          <button>⬇️ Xuất PDF</button>
+        </div>
+      </section>
+    </main>
+  </div>
 
-
-  <!-- JavaScript -->
   <script>
     const tabs = document.querySelectorAll('.tab');
     const contents = document.querySelectorAll('.tab-content');
@@ -126,38 +117,61 @@
         alert("❌ Không thể gửi yêu cầu. Vui lòng kiểm tra lại.");
       }
     });
+
+    // 📤 Gửi ảnh đến Flask AI và nhận kết quả
+    document.getElementById("upload-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const fileInput = document.getElementById("dicom-file");
+      const file = fileInput.files[0];
+      if (!file) return alert("Vui lòng chọn ảnh .dcm");
+
+      const formData = new FormData();
+      formData.append("dicom", file);
+
+      try {
+        const response = await fetch("http://localhost:5062/api/scanrequests/analyze", {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) throw new Error("Phân tích thất bại");
+
+        const result = await response.json();
+        document.getElementById("ai-result-box").textContent = JSON.stringify(result, null, 2);
+      } catch (error) {
+        document.getElementById("ai-result-box").textContent = "❌ Lỗi: " + error.message;
+      }
+    });
+
+    // 📄 Gửi báo cáo
+    async function submitReport() {
+      const patientId = document.getElementById("reportPatientId").value;
+      const content = document.getElementById("reportContent").value;
+
+      if (!patientId || !content) {
+        alert("Vui lòng nhập đầy đủ thông tin.");
+        return;
+      }
+
+      const data = { patientId, content };
+
+      try {
+        const response = await fetch("http://localhost:5062/api/diagnosisreports", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error("Không thể gửi báo cáo.");
+
+        const result = await response.json();
+        alert("✅ Báo cáo đã lưu! ID: " + result.id);
+      } catch (error) {
+        console.error(error);
+        alert("❌ Lỗi khi gửi báo cáo.");
+      }
+    }
   </script>
-  <script> //báo cáo
-  async function submitReport() {
-    const patientId = document.getElementById("reportPatientId").value;
-    const content = document.getElementById("reportContent").value;
-
-    if (!patientId || !content) {
-      alert("Vui lòng nhập đầy đủ thông tin.");
-      return;
-    }
-
-    const data = {
-      patientId: patientId,
-      content: content
-    };
-
-    try {
-      const response = await fetch("http://localhost:5062/api/diagnosisreports", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      if (!response.ok) throw new Error("Không thể gửi báo cáo.");
-
-      const result = await response.json();
-      alert("✅ Báo cáo đã lưu! ID: " + result.id);
-    } catch (error) {
-      console.error(error);
-      alert("❌ Lỗi khi gửi báo cáo.");
-    }
-  }
-</script>
 </body>
 </html>
