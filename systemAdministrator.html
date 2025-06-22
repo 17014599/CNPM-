@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản trị hệ thống</title>
+    <link rel="stylesheet" href="systemAdministrator.css">
+</head>
+<body>
+    <div class="admin-container">
+        <header>
+            <h1>Trang quản trị hệ thống</h1>
+            <nav>
+                <button class="tab-button" onclick="showTab('accounts')">Quản lý tài khoản</button>
+                <button class="tab-button" onclick="showTab('monitor')">Giám sát hệ thống</button>
+                <button class="tab-button" onclick="showTab('config')">Cấu hình AI</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- FE-14: Quản lý tài khoản -->
+            <section id="accounts" class="tab-content">
+                <h2>Quản lý tài khoản người dùng</h2>
+                <form class="user-form">
+                    <input type="text" placeholder="Tên đăng nhập">
+                    <input type="password" placeholder="Mật khẩu">
+                    <select>
+                        <option>Chọn vai trò</option>
+                        <option>Admin</option>
+                        <option>Bác sĩ</option>
+                        <option>Lễ tân</option>
+                        <option>Kỹ thuật viên</option>
+                        <option>AI handler</option>
+                    </select>
+                    <button type="submit">Tạo tài khoản</button>
+                </form>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tài khoản</th>
+                            <th>Vai trò</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>admin01</td>
+                            <td>Admin</td>
+                            <td>
+                                <button>Sửa</button>
+                                <button>Xoá</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- FE-15: Giám sát hệ thống -->
+            <section id="monitor" class="tab-content" style="display:none;">
+                <h2>Giám sát hoạt động hệ thống</h2>
+                <div class="dashboard">
+                    <div class="stat-box">Người dùng đang hoạt động: <strong>12</strong></div>
+                    <div class="stat-box">Lượt đăng nhập hôm nay: <strong>45</strong></div>
+                    <div class="stat-box">Lỗi hệ thống: <strong>0</strong></div>
+                </div>
+                <h3>Nhật ký truy cập</h3>
+                <ul class="log-list">
+                    <li>[10:03] Bác sĩ A đăng nhập</li>
+                    <li>[10:05] Lễ tân thêm bệnh nhân mới</li>
+                </ul>
+            </section>
+
+            <!-- FE-16: Cấu hình hệ thống và AI -->
+            <section id="config" class="tab-content" style="display:none;">
+                <h2>Cấu hình hệ thống và AI</h2>
+                <form class="config-form">
+                    <label>Mô hình AI đang sử dụng</label>
+                    <select>
+                        <option>AI Model v1.0</option>
+                        <option>AI Model v2.0</option>
+                    </select>
+
+                    <label>Ngưỡng cảnh báo (Alert Threshold)</label>
+                    <input type="number" min="0" max="1" step="0.01" value="0.7">
+
+                    <button type="submit">Lưu cấu hình</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+            document.getElementById(tabId).style.display = 'block';
+        }
+    </script>
+</body>
+</html>

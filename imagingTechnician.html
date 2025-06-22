@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Imaging Technician Dashboard</title>
+  <link rel="stylesheet" href="imagingTechnician.css" />
+</head>
+<body>
+  <div class="dashboard">
+    <header>
+      <h1>Imaging Technician</h1>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="import">Import DICOM </button>
+      <button class="tab" data-tab="quality">Kiểm tra chất lượng </button>
+      <button class="tab" data-tab="assign">Gán ảnh cho bệnh nhân </button>
+    </div>
+
+    <div class="tab-content active" id="import">
+      <h2>Nhập ảnh DICOM</h2>
+      <input type="file" accept=".dcm" multiple />
+      <button>Tải lên</button>
+    </div>
+
+    <div class="tab-content" id="quality">
+      <h2>Kiểm tra chất lượng ảnh</h2>
+      <div class="image-preview">[Hiển thị ảnh DICOM]</div>
+      <div class="image-tools">
+        <button>Zoom</button>
+        <button>Pan</button>
+        <button>Độ nét</button>
+        <button>Kiểm tra nhiễu</button>
+        <button>Chụp lại</button>
+      </div>
+    </div>
+
+    <div class="tab-content" id="assign">
+      <h2>Gán ảnh cho bệnh nhân</h2>
+      <select>
+        <option>Chọn bệnh nhân...</option>
+        <option>BN001 - Nguyễn Văn A</option>
+        <option>BN002 - Trần Thị B</option>
+      </select>
+      <input type="text" placeholder="Loại xét nghiệm (CT, MRI, X-ray)"/>
+      <button>Gán ảnh</button>
+    </div>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll(".tab");
+    const contents = document.querySelectorAll(".tab-content");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        contents.forEach(c => c.classList.remove("active"));
+
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.tab).classList.add("active");
+      });
+    });
+  </script>
+</body>
+</html>

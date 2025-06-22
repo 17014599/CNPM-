@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bác sĩ - Dashboard</title>
+  <link rel="stylesheet" href="Physician.css"/>
+</head>
+<body>
+  <div class="dashboard">
+    <header>
+      <h1>Hệ thống hỗ trợ chẩn đoán</h1>
+      <p>Bác sĩ: BS. Nguyễn Văn A</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" onclick="showTab(0)">📋 Hồ sơ</button>
+      <button class="tab" onclick="showTab(1)">📝 Yêu cầu chụp</button>
+      <button class="tab" onclick="showTab(2)">🖼️ Ảnh & AI</button>
+      <button class="tab" onclick="showTab(3)">📄 Báo cáo</button>
+    </nav>
+
+    <main>
+      <!-- Tab 1: Hồ sơ bệnh nhân -->
+      <section class="tab-content active">
+        <h2>Hồ sơ bệnh nhân</h2>
+        <input type="search" placeholder="Tìm theo tên hoặc mã BN...">
+        <ul class="patient-list">
+          <li>BN001 - Nguyễn Văn B - Nam - 65 tuổi</li>
+          <li>BN002 - Trần Thị C - Nữ - 72 tuổi</li>
+          <li>BN003 - Lê Văn D - Nam - 58 tuổi</li>
+        </ul>
+      </section>
+
+      <!-- Tab 2: Yêu cầu chụp ảnh -->
+      <section class="tab-content">
+        <h2>Tạo yêu cầu chụp ảnh</h2>
+        <form id="scanRequestForm">
+          <label>Bệnh nhân</label>
+          <input type="text" id="patientId" placeholder="Nhập mã bệnh nhân" required/>
+
+          <label>Loại chụp</label>
+          <select id="scanType" required>
+            <option>CT Scan</option>
+            <option>MRI</option>
+            <option>X-ray</option>
+          </select>
+
+          <label>Ghi chú</label>
+          <textarea id="note" rows="4" placeholder="Nhập lý do / vùng cần chụp"></textarea>
+
+          <button type="submit">Gửi yêu cầu</button>
+        </form>
+      </section>
+
+      <!-- Tab 3: Ảnh DICOM + AI -->
+      <section class="tab-content">
+        <h2>Ảnh DICOM & Phân tích AI</h2>
+
+        <form id="upload-form">
+          <label>Chọn ảnh DICOM:</label>
+          <input type="file" id="dicom-file" accept=".dcm" required />
+          <button type="submit">📤 Gửi ảnh đến AI</button>
+        </form>
+
+        <h4>Kết quả chẩn đoán</h4>
+        <pre id="ai-result-box">Chưa có kết quả...</pre>
+      </section>
+
+      <!-- Tab 4: Báo cáo chẩn đoán -->
+      <section class="tab-content">
+        <h2>Tạo báo cáo chẩn đoán</h2>
+        <input type="text" id="reportPatientId" placeholder="Mã bệnh nhân" required />
+        <textarea id="reportContent" rows="6" placeholder="Nhập nội dung báo cáo..." required></textarea>
+        <div class="report-actions">
+          <button onclick="submitReport()">💾 Lưu nội bộ</button>
+          <button>⬇️ Xuất PDF</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
+
+    function showTab(index) {
+      tabs.forEach((tab, i) => tab.classList.toggle('active', i === index));
+      contents.forEach((content, i) => content.classList.toggle('active', i === index));
+    }
+
+    // 🎯 Gửi yêu cầu chụp ảnh từ bác sĩ lên backend
+    document.getElementById("scanRequestForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const data = {
+        patientId: document.getElementById("patientId").value,
+        scanType: document.getElementById("scanType").value,
+        note: document.getElementById("note").value
+      };
+
+      try {
+        const response = await fetch("http://localhost:5062/api/scanrequests", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error("Gửi thất bại!");
+
+        const result = await response.json();
+        alert("✅ Gửi thành công! ID yêu cầu: " + result.id);
+      } catch (error) {
+        console.error(error);
+        alert("❌ Không thể gửi yêu cầu. Vui lòng kiểm tra lại.");
+      }
+    });
+
+    // 📤 Gửi ảnh đến Flask AI và nhận kết quả
+    document.getElementById("upload-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const fileInput = document.getElementById("dicom-file");
+      const file = fileInput.files[0];
+      if (!file) return alert("Vui lòng chọn ảnh .dcm");
+
+      const formData = new FormData();
+      formData.append("dicom", file);
+
+      try {
+        const response = await fetch("http://localhost:5062/api/scanrequests/analyze", {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) throw new Error("Phân tích thất bại");
+
+        const result = await response.json();
+        document.getElementById("ai-result-box").textContent = JSON.stringify(result, null, 2);
+      } catch (error) {
+        document.getElementById("ai-result-box").textContent = "❌ Lỗi: " + error.message;
+      }
+    });
+
+    // 📄 Gửi báo cáo
+    async function submitReport() {
+      const patientId = document.getElementById("reportPatientId").value;
+      const content = document.getElementById("reportContent").value;
+
+      if (!patientId || !content) {
+        alert("Vui lòng nhập đầy đủ thông tin.");
+        return;
+      }
+
+      const data = { patientId, content };
+
+      try {
+        const response = await fetch("http://localhost:5062/api/diagnosisreports", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error("Không thể gửi báo cáo.");
+
+        const result = await response.json();
+        alert("✅ Báo cáo đã lưu! ID: " + result.id);
+      } catch (error) {
+        console.error(error);
+        alert("❌ Lỗi khi gửi báo cáo.");
+      }
+    }
+  </script>
+</body>
+</html>

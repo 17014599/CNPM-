@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f0f9ff;
+  margin: 0;
+  padding: 0;
+  color: #1e293b;
+}
+
+.dashboard {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 32px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+header h1 {
+  color: #0f172a;
+  font-size: 28px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 10px;
+}
+
+.tab {
+  flex: 1;
+  background: #e0f2fe;
+  color: #0369a1;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.tab:hover {
+  background: #bae6fd;
+}
+
+.tab.active {
+  background: #0284c7;
+  color: white;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+h2 {
+  margin-bottom: 16px;
+  color: #0f172a;
+}
+
+input[type="file"], input[type="text"], select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 15px;
+}
+
+button {
+  background: #0ea5e9;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #0284c7;
+}
+
+.image-preview {
+  border: 2px dashed #94a3b8;
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  color: #64748b;
+  background: #f8fafc;
+}
+
+.image-tools {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.image-tools button {
+  background: #e2e8f0;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.image-tools button:hover {
+  background: #cbd5e1;
+}

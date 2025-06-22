@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tiếp nhận bệnh nhân</title>
+  <link rel="stylesheet" href="receptionStaff.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Tiếp nhận bệnh nhân</h2>
+
+    <div class="steps">
+      <button class="step active" onclick="showStep(0)">1. Hồ sơ</button>
+      <button class="step" onclick="showStep(1)">2. Triệu chứng</button>
+      <button class="step" onclick="showStep(2)">3. Chuyển bác sĩ</button>
+    </div>
+
+    <form id="reception-form">
+      <!-- Step 1 -->
+      <section class="form-step active">
+        <label>Họ và tên</label>
+        <input type="text" name="fullname" id="fullName" required />
+
+        <label>Ngày sinh</label>
+        <input type="date" name="dob" id="birthDate" required />
+
+        <label>Giới tính</label>
+        <select name="gender" id="gender" required>
+          <option value="">-- Chọn giới tính --</option>
+          <option value="Nam">Nam</option>
+          <option value="Nữ">Nữ</option>
+        </select>
+
+        <label>Số điện thoại</label>
+        <input type="tel" name="phone" required />
+
+        <label>Địa chỉ</label>
+        <input type="text" name="address" required />
+
+        <div class="nav-buttons">
+          <button type="button" onclick="nextStep()">Tiếp theo</button>
+        </div>
+      </section>
+
+      <!-- Step 2 -->
+      <section class="form-step">
+        <label>Triệu chứng hiện tại</label>
+        <textarea name="symptoms" id="medicalHistory" rows="5" required></textarea>
+
+        <div class="nav-buttons">
+          <button type="button" onclick="prevStep()">Quay lại</button>
+          <button type="button" onclick="nextStep()">Tiếp theo</button>
+        </div>
+      </section>
+
+      <!-- Step 3 -->
+      <section class="form-step">
+        <label>Chuyên khoa phù hợp</label>
+        <select id="specialty" name="specialty" required>
+          <option value="">-- Chọn chuyên khoa --</option>
+          <option value="cardiology">Tim mạch</option>
+          <option value="neurology">Thần kinh</option>
+          <option value="orthopedic">Xương khớp</option>
+          <option value="digestive">Tiêu hoá</option>
+        </select>
+
+        <label>Bác sĩ được phân công</label>
+        <select id="assigned_doctor" name="assigned_doctor" required>
+          <option value="">-- Chọn bác sĩ --</option>
+        </select>
+
+        <div class="nav-buttons">
+          <button type="button" onclick="prevStep()">Quay lại</button>
+          <button type="submit">Hoàn tất</button>
+        </div>
+      </section>
+    </form>
+  </div>
+
+  <!-- Script xử lý chuyển bước -->
+  <script>
+    const steps = document.querySelectorAll(".form-step");
+    const indicators = document.querySelectorAll(".step");
+    let currentStep = 0;
+
+    function showStep(index) {
+      steps.forEach((step, i) => {
+        step.classList.toggle("active", i === index);
+        indicators[i].classList.toggle("active", i === index);
+      });
+      currentStep = index;
+    }
+
+    function nextStep() {
+      if (currentStep < steps.length - 1) showStep(currentStep + 1);
+    }
+
+    function prevStep() {
+      if (currentStep > 0) showStep(currentStep - 1);
+    }
+
+    // 🎯 Gán bác sĩ theo chuyên khoa
+    const doctorList = {
+      cardiology: ["BS001 - Nguyễn Văn A", "BS002 - Trần Thị B"],
+      neurology: ["BS003 - Lê Thị C", "BS004 - Phạm Văn D"],
+      orthopedic: ["BS005 - Vũ Thị E", "BS006 - Đặng Văn F"],
+      digestive: ["BS007 - Trịnh Thị G", "BS008 - Mai Văn H"]
+    };
+
+    const specialtySelect = document.getElementById("specialty");
+    const doctorSelect = document.getElementById("assigned_doctor");
+
+    specialtySelect.addEventListener("change", () => {
+      const selected = specialtySelect.value;
+      doctorSelect.innerHTML = '<option value="">-- Chọn bác sĩ --</option>';
+      if (doctorList[selected]) {
+        doctorList[selected].forEach(name => {
+          const opt = document.createElement("option");
+          opt.textContent = name;
+          opt.value = name;
+          doctorSelect.appendChild(opt);
+        });
+      }
+    });
+
+    // 🎯 Gửi dữ liệu bệnh nhân về backend .NET Core
+    document.getElementById("reception-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const data = {
+        fullName: document.getElementById("fullName").value,
+        gender: document.getElementById("gender").value,
+        birthDate: document.getElementById("birthDate").value,
+        medicalHistory: document.getElementById("medicalHistory").value
+      };
+
+      try {
+        const response = await fetch("http://localhost:5062/api/patients", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        alert("✅ Gửi thành công! ID: " + result.id);
+      } catch (error) {
+        alert("❌ Gửi thất bại: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
+
+
