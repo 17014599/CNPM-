@@ -1,0 +1,27 @@
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace AidimsApi.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AiController : ControllerBase
+    {
+        private readonly HttpClient _httpClient;
+
+        public AiController(IHttpClientFactory httpClientFactory)
+        {
+            _httpClient = httpClientFactory.CreateClient();
+        }
+
+        [HttpPost("predict")]
+        public async Task<IActionResult> Predict([FromBody] object input)
+        {
+            // Gửi dữ liệu tới AI server
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5000/predict", input);
+            var aiResult = await response.Content.ReadAsStringAsync();
+            return Content(aiResult, "application/json");
+        }
+    }
+}
