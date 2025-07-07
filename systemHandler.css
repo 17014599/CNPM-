@@ -1,0 +1,149 @@
+/* 🌤️ Toàn trang */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f7fa;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+/* 📦 Khung chính */
+.ai-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* 🧾 Header */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h1 {
+  color: #4a4e69;
+  font-size: 28px;
+}
+
+/* 🔘 Tab nút */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+nav button {
+  background-color: #9a8c98;
+  color: white;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+nav button:hover {
+  background-color: #7d6b8d;
+  transform: scale(1.05);
+}
+
+/* 📄 Nội dung mỗi tab */
+.tab-content {
+  animation: fadeIn 0.4s ease;
+  margin-top: 25px;
+}
+
+/* Animation mượt khi chuyển tab */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 📊 Tiến trình AI */
+.ai-progress-box {
+  margin: 20px 0;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+  color: #555;
+}
+
+.progress-bar {
+  background-color: #e0e0e0;
+  border-radius: 30px;
+  overflow: hidden;
+  height: 26px;
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.progress {
+  background-color: #6c91bf;
+  color: white;
+  text-align: center;
+  line-height: 26px;
+  height: 100%;
+  border-radius: 30px 0 0 30px;
+  font-size: 14px;
+  transition: width 0.5s ease-in-out;
+}
+
+/* 🕘 Lịch sử xử lý */
+.ai-history {
+  list-style: none;
+  background: #f2f2f7;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 15px;
+  line-height: 1.7;
+  color: #555;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+
+/* 🔔 Alert */
+.alert {
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  border-left: 6px solid;
+}
+
+.alert.success {
+  background-color: #e6f4ea;
+  color: #2e7d32;
+  border-color: #81c784;
+}
+
+.alert.warning {
+  background-color: #fff8e1;
+  color: #f57f17;
+  border-color: #ffb300;
+}
+
+.alert.error {
+  background-color: #fdecea;
+  color: #c62828;
+  border-color: #e57373;
+}
+
+/* 📱 Responsive cải thiện nhỏ */
+@media (max-width: 600px) {
+  .ai-container {
+    padding: 20px;
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

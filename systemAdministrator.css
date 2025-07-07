@@ -1,0 +1,190 @@
+/* Reset cơ bản */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Tổng thể container */
+.admin-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Header & Tabs */
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #0077cc;
+    margin-bottom: 10px;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tab-button {
+    background-color: #0077cc;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tab-button:hover {
+    background-color: #005fa3;
+}
+
+/* Nội dung tab */
+.tab-content {
+    margin-top: 30px;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Form và input */
+form {
+    background-color: #e6f2ff;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.user-form, .config-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input, select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: #0077cc;
+    outline: none;
+}
+
+button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+thead {
+    background-color: #0077cc;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+td button {
+    padding: 6px 10px;
+    margin: 2px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+td button:first-child {
+    background-color: #ffc107;
+    color: black;
+}
+
+td button:last-child {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Dashboard thống kê */
+.dashboard {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    flex: 1;
+    min-width: 200px;
+    background-color: #e6f2ff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    font-size: 1.1rem;
+    color: #0077cc;
+}
+
+.stat-box strong {
+    font-size: 1.3rem;
+}
+
+/* Nhật ký log */
+.log-list {
+    list-style: none;
+    padding: 15px;
+    background-color: #f1f3f5;
+    border-radius: 8px;
+    line-height: 1.6;
+}
+
+/* Responsive đơn giản */
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+    }
+
+    .tab-button {
+        flex: 1;
+        text-align: center;
+    }
+}

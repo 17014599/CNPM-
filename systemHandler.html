@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI System Handler</title>
+  <link rel="stylesheet" href="systemHandler.css" />
+</head>
+<body>
+  <div class="ai-container">
+    <header>
+      <h1>Hệ thống AI - Tự động xử lý</h1>
+      <nav>
+        <button onclick="showTab('status')">Trạng thái AI</button>
+        <button onclick="showTab('notifications')">Thông báo phân tích</button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- FE-17: Trạng thái AI -->
+      <section id="status" class="tab-content">
+        <h2>Tiến trình phân tích AI</h2>
+        <div class="ai-progress-box">
+          <label>Tiến trình ca bệnh #1234</label>
+          <div class="progress-bar">
+            <div class="progress" style="width: 65%;">65%</div>
+          </div>
+        </div>
+
+        <h3>Lịch sử xử lý gần đây</h3>
+        <ul class="ai-history">
+          <li>✅ Ca #1233 - Thành công (90% u phổi)</li>
+          <li>✅ Ca #1232 - Thành công (Không bất thường)</li>
+          <li>❌ Ca #1231 - Lỗi xử lý ảnh DICOM</li>
+        </ul>
+      </section>
+
+      <!-- FE-18: Thông báo AI -->
+      <section id="notifications" class="tab-content" style="display: none;">
+        <h2>Thông báo phân tích tới bác sĩ</h2>
+        <div class="alert success">[AI] Bệnh nhân #1233: Kết quả phân tích hoàn tất.</div>
+        <div class="alert warning">[AI] Bệnh nhân #1234: Phát hiện bất thường, cần bác sĩ xem lại.</div>
+        <div class="alert error">[AI] Bệnh nhân #1231: Lỗi ảnh DICOM – yêu cầu kỹ thuật viên kiểm tra.</div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function showTab(id) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

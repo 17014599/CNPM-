@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập hệ thống</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="fullWeb.css" />
+</head>
+<body>
+  <div class="login-container">
+    <h2>Đăng nhập hệ thống</h2>
+    <form id="loginForm">
+      <label for="username">Tên đăng nhập</label>
+      <input type="text" id="username" name="username" required />
+
+      <label for="password">Mật khẩu</label>
+      <input type="password" id="password" name="password" required />
+
+      <label for="role">Vai trò</label>
+      <select id="role" name="role" required>
+        <option value="">-- Chọn vai trò --</option>
+        <option value="admin">Quản trị viên</option>
+        <option value="physician">Bác sĩ</option>
+        <option value="reception">Lễ tân</option>
+        <option value="technician">Kỹ thuật viên</option>
+        <option value="ai_handler">AI Handler</option>
+      </select>
+
+      <button type="submit">Đăng nhập</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const role = document.getElementById("role").value;
+
+      try {
+        const response = await fetch("http://localhost:5062/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password, role })
+        });
+
+        if (response.ok) {
+          
+          switch (role) {
+            case "admin":
+              window.location.href = "systemAdministrator.html";
+              break;
+            case "physician":
+              window.location.href = "Physician.html";
+              break;
+            case "reception":
+              window.location.href = "receptionStaff.html";
+              break;
+            case "technician":
+              window.location.href = "imagingTechnician.html";
+              break;
+            case "ai_handler":
+              window.location.href = "systemHandler.html";
+              break;
+            default:
+              alert("Không tìm thấy vai trò phù hợp.");
+          }
+        } else {
+          alert("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Lỗi kết nối đến server.");
+      }
+    });
+  </script>
+</body>
+</html>
